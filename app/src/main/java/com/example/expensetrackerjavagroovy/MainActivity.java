@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.expensetrackerjavagroovy.controller.DBController;
 import com.google.android.material.snackbar.Snackbar;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText expenseDate;
     private EditText expenseDescription;
     private EditText expenseType;
+    private TextView totalExpense;
     private Button addExpenseButton;
 
     private MongoDatabase mongoDatabase;
@@ -66,10 +69,32 @@ public class MainActivity extends AppCompatActivity {
         expenseType = findViewById(R.id.edit_text_expense_type);
         expenseDescription = findViewById(R.id.edit_text_expense_description);
         addExpenseButton = findViewById(R.id.add_expense_button);
+        totalExpense = findViewById(R.id.text_total_expenses);
 
         try {
             dbController = new DBController(appId, this, email, password);
-            app = dbController.initRealm();
+            app = dbController.initRealm(new DBController.LoginCallBack() {
+                @Override
+                public void onLoginSuccess() {
+                    dbController.initTotalAmount(new DBController.TotalAmountCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.v("Total amount: ",dbController.getTotalAmount()+"");
+                            totalExpense.setText("Total Expenses: " + dbController.getTotalAmount());
+                        }
+
+                        @Override
+                        public void onFailure(String errorMessage) {
+                            Log.v("FAIL","FAIL");
+                        }
+                    });
+                }
+
+                @Override
+                public void onLoginFail() {
+                    Log.v("FAIL","FAIL");
+                }
+            });
         }catch (Exception e){
             Log.i("ERROR", e.toString());
         }
@@ -86,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 expenseDate.setText("");
                 expenseDescription.setText("");
                 expenseType.setText("");
+                Toast.makeText(getApplicationContext(), "Inserted", Toast.LENGTH_LONG).show();
             }
         });
 

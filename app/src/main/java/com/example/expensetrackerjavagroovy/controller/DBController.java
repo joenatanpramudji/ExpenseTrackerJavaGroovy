@@ -42,12 +42,26 @@ import io.realm.Realm;
 import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.Credentials;
+import io.realm.mongodb.RealmResultTask;
 import io.realm.mongodb.User;
 import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
+import io.realm.mongodb.mongo.iterable.MongoCursor;
+
 
 public class DBController{
+
+    public interface TotalAmountCallback {
+        void onSuccess();
+        void onFailure(String errorMessage);
+    }
+
+    public interface LoginCallBack{
+        void onLoginSuccess();
+        void onLoginFail();
+    }
+
     private String appId;
     private Context context;
     private String email;
@@ -56,6 +70,8 @@ public class DBController{
     private MongoCollection<Document> mongoCollection;
     private User user;
     private MongoClient mongoClient;
+
+    private double totalAmount = 0;
     private String[] months = new String[]{
             "January",
             "February",
@@ -79,7 +95,7 @@ public class DBController{
         this.password = password;
     }
 
-    public App initRealm(){
+    public App initRealm(LoginCallBack loginCallBack){
         Realm.init(context);
 
         App app = new App(new AppConfiguration.Builder(appId).build());
@@ -96,14 +112,48 @@ public class DBController{
                     mongoClient = user.getMongoClient("mongodb-atlas");
                     mongoDatabase = mongoClient.getDatabase("MonthlyExpenses");
                     mongoCollection = mongoDatabase.getCollection("Expenses");
+                    loginCallBack.onLoginSuccess();
 
                 }else{
                     Log.v("User", "User failed to login");
+                    loginCallBack.onLoginFail();
                 }
             }
         });
 
         return app;
+    }
+
+    public void initTotalAmount(TotalAmountCallback callback){
+
+        RealmResultTask<MongoCursor<Document>> cursor = mongoCollection.find().iterator();
+
+        cursor.getAsync(task -> {
+            if(task.isSuccess()){
+                MongoCursor<Document> results = task.get();
+                while(results.hasNext()){
+                    Document currentDocument = results.next();
+                    String amountString = currentDocument.getString("amount");
+                    if(amountString != null && !amountString.isEmpty()){
+                        totalAmount += Double.parseDouble(amountString);
+                    }
+                    Log.v("Result", "Adding");
+                    Log.v("Current Amount : ", String.valueOf(totalAmount));
+                }
+                if(!results.hasNext()){
+                    Log.v("Result", "Couldn't find");
+                }
+                callback.onSuccess();
+            }else{
+                Log.v("Task Error", task.getError().toString());
+                callback.onFailure("FAIL");
+            }
+        });
+
+    }
+
+    public double getTotalAmount(){
+        return totalAmount;
     }
 
     public void insertData(String amount, String description, String date, String type){

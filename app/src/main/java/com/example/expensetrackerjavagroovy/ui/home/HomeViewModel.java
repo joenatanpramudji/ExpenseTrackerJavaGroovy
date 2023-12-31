@@ -19,7 +19,7 @@ public class HomeViewModel extends ViewModel {
         List<Record> records = new ArrayList<>();
         double totalExpenses = 1500.333333;
         mText = new MutableLiveData<>();
-        mText.setValue("Total Expenses: " + df.format(totalExpenses));
+        mText.setValue(df.format(totalExpenses));
     }
 
     public LiveData<String> getText() {
