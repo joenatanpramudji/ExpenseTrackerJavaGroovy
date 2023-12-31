@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
     private App app;
     private DBController dbController;
 
+    private static final String FAIL = "FAIL";
+    private static final String ERROR = "ERROR";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,34 +79,23 @@ public class MainActivity extends AppCompatActivity {
             app = dbController.initRealm(new DBController.LoginCallBack() {
                 @Override
                 public void onLoginSuccess() {
-                    dbController.initTotalAmount(new DBController.TotalAmountCallback() {
-                        @Override
-                        public void onSuccess() {
-                            Log.v("Total amount: ",dbController.getTotalAmount()+"");
-                            totalExpense.setText("Total Expenses: " + dbController.getTotalAmount());
-                        }
-
-                        @Override
-                        public void onFailure(String errorMessage) {
-                            Log.v("FAIL","FAIL");
-                        }
-                    });
+                    refreshTotalAmount();
                 }
 
                 @Override
                 public void onLoginFail() {
-                    Log.v("FAIL","FAIL");
+                    Log.v(FAIL,FAIL);
                 }
             });
         }catch (Exception e){
-            Log.i("ERROR", e.toString());
+            Log.i(ERROR, e.toString());
         }
 
         addExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dbController.insertData(
-                        expenseAmount.getText().toString(),
+                        Double.parseDouble(expenseAmount.getText().toString()),
                         expenseDescription.getText().toString(),
                         expenseDate.getText().toString(),
                         expenseType.getText().toString());
@@ -111,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 expenseDate.setText("");
                 expenseDescription.setText("");
                 expenseType.setText("");
+                refreshTotalAmount();
                 Toast.makeText(getApplicationContext(), "Inserted", Toast.LENGTH_LONG).show();
             }
         });
@@ -148,5 +141,20 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    private void refreshTotalAmount(){
+        dbController.initTotalAmount(new DBController.TotalAmountCallback() {
+            @Override
+            public void onSuccess() {
+                Log.v("Total amount: ",String.valueOf(dbController.getTotalAmount()));
+                totalExpense.setText(String.valueOf(dbController.getTotalAmount()));
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Log.v(ERROR,ERROR);
+            }
+        });
     }
 }

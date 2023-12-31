@@ -130,12 +130,13 @@ public class DBController{
 
         cursor.getAsync(task -> {
             if(task.isSuccess()){
+                totalAmount = 0;
                 MongoCursor<Document> results = task.get();
                 while(results.hasNext()){
                     Document currentDocument = results.next();
-                    String amountString = currentDocument.getString("amount");
-                    if(amountString != null && !amountString.isEmpty()){
-                        totalAmount += Double.parseDouble(amountString);
+                    Double amount = currentDocument.getDouble("amount");
+                    if(amount != null){
+                        totalAmount += amount;
                     }
                     Log.v("Result", "Adding");
                     Log.v("Current Amount : ", String.valueOf(totalAmount));
@@ -156,7 +157,7 @@ public class DBController{
         return totalAmount;
     }
 
-    public void insertData(String amount, String description, String date, String type){
+    public void insertData(double amount, String description, String date, String type){
 
         String day = date.substring(0,2);
         String month = date.substring(2,4);
