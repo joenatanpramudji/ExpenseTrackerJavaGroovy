@@ -29,6 +29,9 @@ import android.view.Display;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.expensetrackerjavagroovy.LoginCallBack;
+import com.example.expensetrackerjavagroovy.TotalAmountCallback;
+
 import org.bson.Document;
 
 import java.io.File;
@@ -52,15 +55,7 @@ import io.realm.mongodb.mongo.iterable.MongoCursor;
 
 public class DBController{
 
-    public interface TotalAmountCallback {
-        void onSuccess();
-        void onFailure(String errorMessage);
-    }
 
-    public interface LoginCallBack{
-        void onLoginSuccess();
-        void onLoginFail();
-    }
 
     private String appId;
     private Context context;

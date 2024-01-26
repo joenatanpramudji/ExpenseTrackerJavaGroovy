@@ -33,7 +33,7 @@ import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             dbController = new DBController(appId, this, email, password);
-            app = dbController.initRealm(new DBController.LoginCallBack() {
+            app = dbController.initRealm(new LoginCallBack() {
                 @Override
                 public void onLoginSuccess() {
                     refreshTotalAmount();
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshTotalAmount(){
-        dbController.initTotalAmount(new DBController.TotalAmountCallback() {
+        dbController.initTotalAmount(new TotalAmountCallback() {
             @Override
             public void onSuccess() {
                 Log.v("Total amount: ",String.valueOf(dbController.getTotalAmount()));
