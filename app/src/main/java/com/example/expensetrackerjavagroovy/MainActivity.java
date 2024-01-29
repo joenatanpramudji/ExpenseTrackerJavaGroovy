@@ -9,20 +9,29 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.expensetrackerjavagroovy.adapter.ExpenseListAdapter;
 import com.example.expensetrackerjavagroovy.controller.DBController;
+import com.example.expensetrackerjavagroovy.model.Record;
+import com.example.expensetrackerjavagroovy.ui.gallery.GalleryFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.expensetrackerjavagroovy.databinding.ActivityMainBinding;
 
 import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.mongodb.App;
@@ -50,6 +59,10 @@ public class MainActivity extends AppCompatActivity{
     private EditText expenseType;
     private TextView totalExpense;
     private Button addExpenseButton;
+
+    private RecyclerView recyclerView;
+
+    private List<Record> recordList = new ArrayList<>();
 
     private MongoDatabase mongoDatabase;
     private MongoClient mongoClient;
@@ -80,6 +93,7 @@ public class MainActivity extends AppCompatActivity{
                 @Override
                 public void onLoginSuccess() {
                     refreshTotalAmount();
+                    refreshAmountList();
                 }
 
                 @Override
@@ -94,11 +108,11 @@ public class MainActivity extends AppCompatActivity{
         addExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dbController.insertData(
-                        Double.parseDouble(expenseAmount.getText().toString()),
+                Record record = new Record(Double.parseDouble(expenseAmount.getText().toString()),
                         expenseDescription.getText().toString(),
                         expenseDate.getText().toString(),
                         expenseType.getText().toString());
+                dbController.insertData(record);
                 expenseAmount.setText("");
                 expenseDate.setText("");
                 expenseDescription.setText("");
@@ -127,6 +141,11 @@ public class MainActivity extends AppCompatActivity{
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        recyclerView = findViewById(R.id.expensesList);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new ExpenseListAdapter(getApplicationContext(), recordList));
     }
 
     @Override
@@ -154,6 +173,24 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onFailure(String errorMessage) {
                 Log.v(ERROR,ERROR);
+            }
+        });
+    }
+
+    private void refreshAmountList(){
+        dbController.showAllData(new AllDataCallback() {
+            @Override
+            public void onSuccess() {
+                for (Record record: dbController.getDataList()
+                     ) {
+                    Log.v("Amount List: ", String.valueOf(record.getAmount()));
+                    recordList.add(new Record(record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
+                }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
             }
         });
     }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    >
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:id="@+id/expenseListLogo"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true">
+    </ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/expenseAmount"
+        android:textColor="@color/black"
+        android:layout_toEndOf="@+id/expenseListLogo"
+        android:text="@string/expense_amount"
+        android:textSize="30dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/expenseDescription"
+        android:textColor="@color/black"
+        android:layout_below="@+id/expenseAmount"
+        android:layout_toEndOf="@+id/expenseListLogo"
+        android:text="@string/expense_description"
+        android:textSize="20dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/expenseType"
+        android:textColor="@color/black"
+        android:layout_below="@+id/expenseDescription"
+        android:layout_toEndOf="@+id/expenseListLogo"
+        android:text="@string/expense_type"
+        android:textSize="15dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/expenseDate"
+        android:textColor="@color/black"
+        android:layout_below="@+id/expenseType"
+        android:layout_toEndOf="@+id/expenseListLogo"
+        android:text="@string/expense_date"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/expenseDate"
+        android:layout_marginTop="10dp"
+        android:background="#686868"/>
+
+</RelativeLayout>

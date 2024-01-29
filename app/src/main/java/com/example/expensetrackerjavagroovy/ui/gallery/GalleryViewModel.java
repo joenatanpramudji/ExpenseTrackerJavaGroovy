@@ -3,17 +3,18 @@ package com.example.expensetrackerjavagroovy.ui.gallery;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class GalleryViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<RecyclerView> mRecyclerView;
 
     public GalleryViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is gallery fragment");
+        mRecyclerView = new MutableLiveData<>();
+//        mRecyclerView.setValue(new RecyclerView(this));
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<RecyclerView> getRecyclerView() {
+        return mRecyclerView;
     }
 }

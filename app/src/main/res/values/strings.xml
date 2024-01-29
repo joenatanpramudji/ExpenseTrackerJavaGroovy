@@ -17,4 +17,9 @@
     <string name="add_expense_button">Add</string>
     <string name="date_format_hint">DDMMYYYY</string>
     <string name="total_expenses_description">Total Expenses: </string>
+
+    <string name="expense_description">Description: </string>
+    <string name="expense_amount">Amount: </string>
+    <string name="expense_type">Type: : </string>
+    <string name="expense_date">Date: : </string>
 </resources>
