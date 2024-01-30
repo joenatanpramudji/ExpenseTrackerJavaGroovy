@@ -14,12 +14,12 @@
     <fragment
         android:id="@+id/nav_gallery"
         android:name="com.example.expensetrackerjavagroovy.ui.gallery.GalleryFragment"
-        android:label="@string/menu_about"
+        android:label="@string/menu_expenses"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="com.example.expensetrackerjavagroovy.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_expenses"
+        android:label="@string/menu_about"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>
