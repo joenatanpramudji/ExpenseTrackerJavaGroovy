@@ -65,17 +65,7 @@ public class GalleryFragment extends Fragment {
             Log.i(ERROR, e.toString());
         }
 
-//        final TextView textView = binding.textGallery;
-//        galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
-
-//
-        List<Record> recordList = new ArrayList<>();
-//
-//        recyclerView = findViewById(R.id.expensesList);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//        recyclerView.setAdapter(new ExpenseListAdapter(getContext(), recordList));
 
         return root;
     }
