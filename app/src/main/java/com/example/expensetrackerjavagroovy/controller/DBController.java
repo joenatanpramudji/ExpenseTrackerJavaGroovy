@@ -24,7 +24,6 @@ import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
 import io.realm.mongodb.mongo.iterable.MongoCursor;
 
-
 public class DBController{
 
     public String appId = "application-0-ojwlu";
