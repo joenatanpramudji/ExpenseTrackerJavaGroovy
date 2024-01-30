@@ -47,10 +47,10 @@ public class MainActivity extends AppCompatActivity{
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
-    public String appId = "application-0-ojwlu";
-
-    public static String email = "okuwagapramudji@gmail.com";
-    public static String password = "TEST123";
+//    public String appId = "application-0-ojwlu";
+//
+//    public static String email = "okuwagapramudji@gmail.com";
+//    public static String password = "TEST123";
 
     private static final int RC_GET_AUTH_CODE = 9003;
     private EditText expenseAmount;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity{
 
     private RecyclerView recyclerView;
 
-    private List<Record> recordList = new ArrayList<>();
+//    private List<Record> recordList = new ArrayList<>();
 
     private MongoDatabase mongoDatabase;
     private MongoClient mongoClient;
@@ -88,12 +88,12 @@ public class MainActivity extends AppCompatActivity{
         totalExpense = findViewById(R.id.text_total_expenses);
 
         try {
-            dbController = new DBController(appId, this, email, password);
+            dbController = new DBController(getApplicationContext());
             app = dbController.initRealm(new LoginCallBack() {
                 @Override
                 public void onLoginSuccess() {
                     refreshTotalAmount();
-                    refreshAmountList();
+//                    refreshAmountList();
                 }
 
                 @Override
@@ -142,10 +142,10 @@ public class MainActivity extends AppCompatActivity{
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        recyclerView = findViewById(R.id.expensesList);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ExpenseListAdapter(getApplicationContext(), recordList));
+//        recyclerView = findViewById(R.id.expensesList);
+//
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setAdapter(new ExpenseListAdapter(getApplicationContext(), recordList));
     }
 
     @Override
@@ -177,21 +177,21 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    private void refreshAmountList(){
-        dbController.showAllData(new AllDataCallback() {
-            @Override
-            public void onSuccess() {
-                for (Record record: dbController.getDataList()
-                     ) {
-                    Log.v("Amount List: ", String.valueOf(record.getAmount()));
-                    recordList.add(new Record(record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
-                }
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-
-            }
-        });
-    }
+//    private void refreshAmountList(){
+//        dbController.showAllData(new AllDataCallback() {
+//            @Override
+//            public void onSuccess() {
+//                for (Record record: dbController.getDataList()
+//                     ) {
+//                    Log.v("Amount List: ", String.valueOf(record.getAmount()));
+//                    recordList.add(new Record(record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(String errorMessage) {
+//
+//            }
+//        });
+//    }
 }

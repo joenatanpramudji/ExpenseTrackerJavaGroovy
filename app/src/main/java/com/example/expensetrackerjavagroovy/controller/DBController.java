@@ -59,12 +59,12 @@ import io.realm.mongodb.mongo.iterable.MongoCursor;
 
 public class DBController{
 
+    public String appId = "application-0-ojwlu";
 
+    public static String email = "okuwagapramudji@gmail.com";
+    public static String password = "TEST123";
 
-    private String appId;
     private Context context;
-    private String email;
-    private String password;
     private MongoDatabase mongoDatabase;
     private MongoCollection<Document> mongoCollection;
     private User user;
@@ -78,6 +78,9 @@ public class DBController{
     private static final String FIELD_DATE = "date";
     private static final String FIELD_TYPE = "type";
     private static final String FIELD_DESCRIPTION = "description";
+
+    private static final String FAIL = "FAIL";
+    private static final String ERROR = "ERROR";
 
 
     private String[] months = new String[]{
@@ -96,12 +99,34 @@ public class DBController{
     };
 
 
-    public DBController(String appId, Context context, String email, String password){
-        this.appId = appId;
+    public DBController(Context context){
+//        this.appId = appId;
         this.context = context;
-        this.email = email;
-        this.password = password;
+//        this.email = email;
+//        this.password = password;
     }
+
+    public DBController(){
+    }
+
+//    public void loadConfig(){
+//        try {
+//            initRealm(new LoginCallBack() {
+//                @Override
+//                public void onLoginSuccess() {
+//                    refreshTotalAmount();
+//                    refreshAmountList();
+//                }
+//
+//                @Override
+//                public void onLoginFail() {
+//                    Log.v(FAIL,FAIL);
+//                }
+//            });
+//        }catch (Exception e){
+//            Log.i(ERROR, e.toString());
+//        }
+//    }
 
     public App initRealm(LoginCallBack loginCallBack){
         Realm.init(context);
@@ -219,4 +244,40 @@ public class DBController{
             }
         });
     }
+
+    public String implementInitTotalAmount(){
+        final String[] result = {""};
+        initTotalAmount(new TotalAmountCallback() {
+            @Override
+            public void onSuccess() {
+                Log.v("Total amount: ",String.valueOf(getTotalAmount()));
+                result[0] = String.valueOf(getTotalAmount());
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Log.v(ERROR,ERROR);
+            }
+        });
+
+        return result[0];
+    }
+
+//    private void refreshAmountList(){
+//        showAllData(new AllDataCallback() {
+//            @Override
+//            public void onSuccess() {
+//                for (Record record: dbController.getDataList()
+//                ) {
+//                    Log.v("Amount List: ", String.valueOf(record.getAmount()));
+//                    recordList.add(new Record(record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(String errorMessage) {
+//
+//            }
+//        });
+//    }
 }

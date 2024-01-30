@@ -1,6 +1,7 @@
 package com.example.expensetrackerjavagroovy.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -31,10 +32,21 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ExpenseListViewHolder holder, int position) {
-        holder.amountView.setText(records.get(position).getAmount().toString());
-        holder.descriptionView.setText(records.get(position).getDescription().toString());
-        holder.typeView.setText(records.get(position).getType().toString());
-        holder.dateView.setText(records.get(position).getDate().toString());
+
+        String recordAmt = "", recordDesc = "", recordType = "", recordDate = "";
+        try {
+            recordAmt = records.get(position).getAmount().toString();
+            recordDesc = records.get(position).getDescription().toString();
+            recordType = records.get(position).getType().toString();
+            recordDate = records.get(position).getDate().toString();
+        }catch (Exception e){
+            Log.v("NULL POINTER ERROR", e.toString());
+        }
+
+        holder.amountView.setText(String.format("Amount: %s", recordAmt));
+        holder.descriptionView.setText(String.format("Description: %s", recordDesc));
+        holder.typeView.setText(String.format("Type: %s", recordType));
+        holder.dateView.setText(String.format("Date: %s", recordDate));
     }
 
     @Override
