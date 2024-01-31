@@ -1,13 +1,16 @@
 package com.example.expensetrackerjavagroovy.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.expensetrackerjavagroovy.EditDataActivity;
 import com.example.expensetrackerjavagroovy.R;
 import com.example.expensetrackerjavagroovy.model.Record;
 
@@ -47,6 +50,13 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListViewHold
         holder.descriptionView.setText(String.format("Description: %s", recordDesc));
         holder.typeView.setText(String.format("Type: %s", recordType));
         holder.dateView.setText(String.format("Date: %s", recordDate));
+        holder.btnEditData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, EditDataActivity.class);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

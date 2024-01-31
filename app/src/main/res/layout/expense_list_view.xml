@@ -48,11 +48,20 @@
         android:layout_toEndOf="@+id/expenseListLogo"
         android:text="@string/expense_date"/>
 
+    <Button
+        android:id="@+id/editDataButton"
+        android:layout_width="76dp"
+        android:layout_height="38dp"
+        android:layout_below="@+id/expenseDate"
+        android:layout_toEndOf="@+id/expenseListLogo"
+        android:backgroundTint="#095BC1"
+        android:text="Edit" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_below="@+id/expenseDate"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/editDataButton"
+        android:layout_marginTop="5dp"
         android:background="#686868"/>
 
 </RelativeLayout>
