@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="58dp"
             android:layout_marginBottom="320dp"
-            android:backgroundTint="#095BC1"
+            android:backgroundTint="@color/joe_color"
             android:backgroundTintMode="src_atop"
             android:text="@string/add_expense_button" />
     </LinearLayout>

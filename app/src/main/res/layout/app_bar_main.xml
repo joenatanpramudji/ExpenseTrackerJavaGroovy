@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#095BC1"
+            android:background="@color/joe_color"
             app:popupTheme="@style/Theme.ExpenseTrackerJavaGroovy.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>

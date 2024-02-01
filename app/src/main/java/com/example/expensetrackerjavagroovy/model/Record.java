@@ -1,10 +1,20 @@
 package com.example.expensetrackerjavagroovy.model;
 
 public class Record {
+
+    String id;
     Double amount;
     String description;
     String date;
     String type;
+
+    public Record(String id, Double amount, String description, String date, String type) {
+        this.id = id;
+        this.amount = amount;
+        this.description = description;
+        this.date = date;
+        this.type = type;
+    }
 
     public Record(Double amount, String description, String date, String type) {
         this.amount = amount;
@@ -43,5 +53,13 @@ public class Record {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

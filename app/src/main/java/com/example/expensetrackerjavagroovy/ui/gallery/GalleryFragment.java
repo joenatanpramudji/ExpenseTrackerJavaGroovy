@@ -85,7 +85,7 @@ public class GalleryFragment extends Fragment {
                 for (Record record: dbController.getDataList()
                 ) {
                     Log.v("Amount List: ", String.valueOf(record.getAmount()));
-                    recordList.add(new Record(record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
+                    recordList.add(new Record(record.getId(), record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
                 }
                 recyclerView.setAdapter(new ExpenseListAdapter(getContext(), recordList));
             }

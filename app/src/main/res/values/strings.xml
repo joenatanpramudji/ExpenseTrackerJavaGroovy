@@ -18,6 +18,12 @@
     <string name="date_format_hint">DDMMYYYY</string>
     <string name="total_expenses_description">Total Expenses: </string>
 
+    <string name="edit_expense_enter_amount">Edit Amount</string>
+    <string name="edit_expense_enter_description">Edit Description</string>
+    <string name="edit_expense_enter_type">Edit Type</string>
+    <string name="edit_add_expense_button">Edit</string>
+    <string name="edit_date_format_hint">DDMMYYYY</string>
+
     <string name="expense_description">Description: </string>
     <string name="expense_amount">Amount: </string>
     <string name="expense_type">Type: : </string>

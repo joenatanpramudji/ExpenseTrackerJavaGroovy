@@ -9,6 +9,7 @@ import com.example.expensetrackerjavagroovy.TotalAmountCallback;
 import com.example.expensetrackerjavagroovy.model.Record;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class DBController{
     private static final String FIELD_DATE = "date";
     private static final String FIELD_TYPE = "type";
     private static final String FIELD_DESCRIPTION = "description";
+    private static final String FIELD_ID = "_id";
 
     private static final String FAIL = "FAIL";
     private static final String ERROR = "ERROR";
@@ -165,10 +167,19 @@ public class DBController{
         });
     }
 
-//    public void editData(Record record){
-//        Document queryFilter = new Document("userid", user.getId());
-//        mongoCollection.findOneAndUpdate(queryFilter)
-//    }
+    public void editData(String id, Record record){
+        Document queryFilter = new Document("userid", id);
+        String day = record.getDate().substring(0,2);
+        String month = record.getDate().substring(2,4);
+        String year = record.getDate().substring(4);
+        Document data = new Document(
+//                "userid", user.getId())
+                FIELD_AMOUNT, record.getAmount())
+                .append(FIELD_DESCRIPTION, record.getDescription())
+                .append(FIELD_TYPE, record.getType())
+                .append(FIELD_DATE, day+"-"+month+"-"+year);
+        mongoCollection.findOneAndUpdate(queryFilter,data);
+    }
 
     public void showAllData(AllDataCallback callback){
         RealmResultTask<MongoCursor<Document>> cursor = mongoCollection.find().iterator();
@@ -180,8 +191,9 @@ public class DBController{
                     String description = currentDocument.getString(FIELD_DESCRIPTION);
                     String date = currentDocument.getString(FIELD_DATE);
                     String type = currentDocument.getString(FIELD_TYPE);
+                    String id = currentDocument.getObjectId(FIELD_ID).toString();
                     Double amount = currentDocument.getDouble(FIELD_AMOUNT);
-                    Record record = new Record(amount, description, date, type);
+                    Record record = new Record(id,amount, description, date, type);
                     dataList.add(record);
                 }
                 if(!results.hasNext()){

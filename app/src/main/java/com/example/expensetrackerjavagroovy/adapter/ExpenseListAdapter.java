@@ -22,6 +22,8 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListViewHold
 
     List<Record> records;
 
+    String recordAmt = "", recordDesc = "", recordType = "", recordDate = "";
+
     public ExpenseListAdapter(Context context, List<Record> records) {
         this.context = context;
         this.records = records;
@@ -36,7 +38,6 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListViewHold
     @Override
     public void onBindViewHolder(@NonNull ExpenseListViewHolder holder, int position) {
 
-        String recordAmt = "", recordDesc = "", recordType = "", recordDate = "";
         try {
             recordAmt = records.get(position).getAmount().toString();
             recordDesc = records.get(position).getDescription().toString();
@@ -54,6 +55,9 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListViewHold
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, EditDataActivity.class);
+                String id = records.get(position).getId();
+                intent.putExtra("_id", id);
+                intent.putExtra("amount", recordAmt);
                 context.startActivity(intent);
             }
         });

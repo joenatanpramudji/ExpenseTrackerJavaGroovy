@@ -54,7 +54,7 @@
         android:layout_height="38dp"
         android:layout_below="@+id/expenseDate"
         android:layout_toEndOf="@+id/expenseListLogo"
-        android:backgroundTint="#095BC1"
+        android:backgroundTint="@color/joe_color"
         android:text="Edit" />
 
     <LinearLayout
