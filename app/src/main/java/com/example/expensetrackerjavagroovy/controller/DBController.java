@@ -9,6 +9,7 @@ import com.example.expensetrackerjavagroovy.TotalAmountCallback;
 import com.example.expensetrackerjavagroovy.model.Record;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import io.realm.mongodb.mongo.MongoClient;
 import io.realm.mongodb.mongo.MongoCollection;
 import io.realm.mongodb.mongo.MongoDatabase;
 import io.realm.mongodb.mongo.iterable.MongoCursor;
+import io.realm.mongodb.mongo.result.UpdateResult;
 
 public class DBController{
 
@@ -168,17 +170,22 @@ public class DBController{
     }
 
     public void editData(String id, Record record){
-        Document queryFilter = new Document("userid", id);
+        Document queryFilter = new Document("_id", new ObjectId(id));
         String day = record.getDate().substring(0,2);
         String month = record.getDate().substring(2,4);
         String year = record.getDate().substring(4);
         Document data = new Document(
-//                "userid", user.getId())
                 FIELD_AMOUNT, record.getAmount())
                 .append(FIELD_DESCRIPTION, record.getDescription())
                 .append(FIELD_TYPE, record.getType())
                 .append(FIELD_DATE, day+"-"+month+"-"+year);
-        mongoCollection.findOneAndUpdate(queryFilter,data);
+        mongoCollection.updateOne(queryFilter,data).getAsync(result -> {
+            if(result.isSuccess()){
+                Log.v("Data", "Data Updated Successfully");
+            }else{
+                Log.v("Data", "Error: " + result.getError().toString());
+            }
+        });
     }
 
     public void showAllData(AllDataCallback callback){

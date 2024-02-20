@@ -53,23 +53,13 @@ public class EditDataActivity extends AppCompatActivity {
         editDate = findViewById(R.id.edit_data_expense_date);
         editButton = findViewById(R.id.edit_expense_button);
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Record record = new Record(Double.parseDouble(editAmount.getText().toString()),
-                        editDescription.getText().toString(),
-                        editDate.getText().toString(),
-                        editType.getText().toString());
-                dbController.editData(id, record);
-            }
-        });
 
         try {
             dbController = new DBController(this);
             app = dbController.initRealm(new LoginCallBack() {
                 @Override
                 public void onLoginSuccess() {
-
+                    Log.v("SUCCESS", "LOGIN SUCCESS");
                 }
 
                 @Override
@@ -80,6 +70,18 @@ public class EditDataActivity extends AppCompatActivity {
         }catch (Exception e){
             Log.i(ERROR, e.toString());
         }
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Record record = new Record(Double.parseDouble(editAmount.getText().toString()),
+                        editDescription.getText().toString(),
+                        editDate.getText().toString(),
+                        editType.getText().toString());
+                dbController.editData(id, record);
+                finish();
+            }
+        });
 
     }
 }

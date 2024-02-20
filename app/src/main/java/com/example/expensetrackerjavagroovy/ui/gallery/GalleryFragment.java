@@ -38,6 +38,7 @@ public class GalleryFragment extends Fragment {
 
     private static final String FAIL = "FAIL";
     private static final String ERROR = "ERROR";
+    RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +48,13 @@ public class GalleryFragment extends Fragment {
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final RecyclerView recyclerView = binding.expensesList;
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        recyclerView = binding.expensesList;
 
         try {
             dbController = new DBController(getContext());
@@ -67,8 +74,6 @@ public class GalleryFragment extends Fragment {
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        return root;
     }
 
     @Override

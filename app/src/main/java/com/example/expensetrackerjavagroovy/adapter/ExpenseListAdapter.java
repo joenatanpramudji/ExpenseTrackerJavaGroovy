@@ -58,6 +58,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListViewHold
                 String id = records.get(position).getId();
                 intent.putExtra("_id", id);
                 intent.putExtra("amount", recordAmt);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 context.startActivity(intent);
             }
         });
