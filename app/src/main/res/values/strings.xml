@@ -28,4 +28,10 @@
     <string name="expense_amount">Amount: </string>
     <string name="expense_type">Type: : </string>
     <string name="expense_date">Date: : </string>
+
+    <string-array name="expense_type_spinner">
+        <item>Food</item>
+        <item>Transportation</item>
+        <item>Others</item>
+    </string-array>
 </resources>

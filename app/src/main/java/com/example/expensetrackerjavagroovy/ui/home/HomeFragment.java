@@ -5,8 +5,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.expensetrackerjavagroovy.LoginCallBack;
+import com.example.expensetrackerjavagroovy.R;
 import com.example.expensetrackerjavagroovy.TotalAmountCallback;
 import com.example.expensetrackerjavagroovy.controller.DBController;
 import com.example.expensetrackerjavagroovy.databinding.FragmentHomeBinding;
@@ -22,7 +26,7 @@ import com.example.expensetrackerjavagroovy.model.Record;
 
 import io.realm.mongodb.App;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private FragmentHomeBinding binding;
 
@@ -36,9 +40,13 @@ public class HomeFragment extends Fragment {
      EditText expenseAmount;
      EditText expenseDate;
      EditText expenseDescription;
-     EditText expenseType;
+//     EditText expenseType;
+
+    Spinner expenseType;
      TextView totalExpense;
      Button addExpenseButton;
+
+     String expenseTypeText = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +60,8 @@ public class HomeFragment extends Fragment {
         expenseAmount = binding.editTextExpenseAmount;
         expenseDate = binding.editTextExpenseDate;
         expenseDescription = binding.editTextExpenseDescription;
-        expenseType = binding.editTextExpenseType;
+//        expenseType = binding.editTextExpenseType;
+        expenseType = binding.expenseTypeSpinner;
         totalExpense = binding.textTotalExpenses;
         addExpenseButton = binding.addExpenseButton;
 
@@ -74,20 +83,30 @@ public class HomeFragment extends Fragment {
             Log.i(ERROR, e.toString());
         }
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.expense_type_spinner, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        expenseType.setAdapter(adapter);
+        expenseType.setOnItemSelectedListener(this);
+
         addExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Record record = new Record(Double.parseDouble(expenseAmount.getText().toString()),
-                        expenseDescription.getText().toString(),
-                        expenseDate.getText().toString(),
-                        expenseType.getText().toString());
-                dbController.insertData(record);
-                expenseAmount.setText("");
-                expenseDate.setText("");
-                expenseDescription.setText("");
-                expenseType.setText("");
-                refreshTotalAmount();
-                Toast.makeText(getContext(), "Inserted", Toast.LENGTH_LONG).show();
+                try{
+                    Record record = new Record(Double.parseDouble(expenseAmount.getText().toString()),
+                            expenseDescription.getText().toString(),
+                            expenseDate.getText().toString(),
+                            expenseTypeText);
+                    dbController.insertData(record);
+                    expenseAmount.setText("");
+                    expenseDate.setText("");
+                    expenseDescription.setText("");
+//                expenseType.setText("");
+                    refreshTotalAmount();
+                    Toast.makeText(getContext(), "Inserted", Toast.LENGTH_LONG).show();
+                }catch (Exception e){
+                    String warning = "Please fill everything";
+                    Toast.makeText(getContext(),warning, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -115,5 +134,15 @@ public class HomeFragment extends Fragment {
                 Log.v(ERROR,ERROR);
             }
         });
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        expenseTypeText = adapterView.getItemAtPosition(i).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }
