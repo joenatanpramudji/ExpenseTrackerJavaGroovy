@@ -12,7 +12,10 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -202,6 +205,51 @@ public class DBController{
                     Double amount = currentDocument.getDouble(FIELD_AMOUNT);
                     Record record = new Record(id,amount, description, date, type);
                     dataList.add(record);
+                }
+                if(!results.hasNext()){
+                    Log.v("Result", "Couldn't find");
+                }
+                Log.v("Result", dataList.toString());
+                callback.onSuccess();
+            }else{
+                Log.v("Task Error", task.getError().toString());
+                callback.onFailure("FAIL");
+            }
+        });
+    }
+
+    public void showAllData(AllDataCallback callback, String startFilterDate, String endFilterDate){
+        dataList.clear();
+        RealmResultTask<MongoCursor<Document>> cursor = mongoCollection.find().iterator();
+        cursor.getAsync(task -> {
+            if(task.isSuccess()){
+                MongoCursor<Document> results = task.get();
+                while(results.hasNext()){
+                    Document currentDocument = results.next();
+                    String description = currentDocument.getString(FIELD_DESCRIPTION);
+                    String date = currentDocument.getString(FIELD_DATE);
+                    String type = currentDocument.getString(FIELD_TYPE);
+                    String id = currentDocument.getObjectId(FIELD_ID).toString();
+                    Double amount = currentDocument.getDouble(FIELD_AMOUNT);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    Date resultDate;
+                    Date startDate;
+                    Date endDate;
+                    try {
+                        resultDate = dateFormat.parse(date);
+                        startDate = dateFormat.parse(startFilterDate);
+                        endDate = dateFormat.parse(endFilterDate);
+
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    assert resultDate != null;
+                    if(resultDate.compareTo(startDate) >= 0 && resultDate.compareTo(endDate) <= 0){
+                        Record record = new Record(id,amount, description, date, type);
+                        dataList.add(record);
+                    }
                 }
                 if(!results.hasNext()){
                     Log.v("Result", "Couldn't find");

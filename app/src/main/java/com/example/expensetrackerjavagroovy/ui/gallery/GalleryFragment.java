@@ -107,9 +107,9 @@ public class GalleryFragment extends Fragment {
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                Intent intent = new Intent(getContext(),HistoryFilterActivity.class);
+//                Intent intent = new Intent(getContext(),HistoryFilterActivity.class);
 //                startActivityForResult(intent, 1);
-                historyFilterAcivityLauncher.launch(intent);
+//                historyFilterAcivityLauncher.launch(intent);
                 return false;
             }
         });
@@ -149,12 +149,12 @@ public class GalleryFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                refreshAmountList(recyclerView);
+                refreshFilter(recyclerView, startDateFilter, endDateFilter);
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                refreshAmountList(recyclerView);
+                refreshFilter(recyclerView, startDateFilter, endDateFilter);
             }
         });
 
@@ -190,12 +190,12 @@ public class GalleryFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                refreshAmountList(recyclerView);
+                refreshFilter(recyclerView, startDateFilter, endDateFilter);
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                refreshAmountList(recyclerView);
+                refreshFilter(recyclerView, startDateFilter, endDateFilter);
             }
         });
 
@@ -250,32 +250,37 @@ public class GalleryFragment extends Fragment {
         dbController.showAllData(new AllDataCallback() {
             @Override
             public void onSuccess() {
+//                for (Record record: dbController.getDataList()
+//                ) {
+//                    Log.v("Amount List: ", String.valueOf(record.getAmount()));
+//                    if(!startDateFilter.getText().equals("Start Date...") && !endDateFilter.getText().equals("End Date...")){
+//                        String[] resultDates = record.getDate().split("-");
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+//                        Date resultDate;
+//                        Date startFilterDate;
+//                        Date endFilterDate;
+//                        try {
+//                            resultDate = dateFormat.parse(record.getDate());
+//                            startFilterDate = dateFormat.parse(startDateFilter.getText().toString());
+//                            endFilterDate = dateFormat.parse(endDateFilter.getText().toString());
+//
+//                        } catch (ParseException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//
+//                        assert resultDate != null;
+//                        if(resultDate.compareTo(startFilterDate) >= 0 && resultDate.compareTo(endFilterDate) <= 0 ){
+//                            recordList.add(new Record(record.getId(), record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
+//                        }
+//                    }else{
+//                        recordList.add(new Record(record.getId(), record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
+//                    }
+//
+//                }
+//                recyclerView.setAdapter(new ExpenseListAdapter(getContext(), recordList));
                 for (Record record: dbController.getDataList()
                 ) {
-                    Log.v("Amount List: ", String.valueOf(record.getAmount()));
-                    if(!(startDateFilter.getHint().equals("Start Date...") && endDateFilter.getHint().equals("End Date..."))){
-                        String[] resultDates = record.getDate().split("-");
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                        Date resultDate;
-                        Date startFilterDate;
-                        Date endFilterDate;
-                        try {
-                            resultDate = dateFormat.parse(record.getDate());
-                            startFilterDate = dateFormat.parse(startDateFilter.getText().toString());
-                            endFilterDate = dateFormat.parse(endDateFilter.getText().toString());
-
-                        } catch (ParseException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        assert resultDate != null;
-                        if(resultDate.compareTo(startFilterDate) >= 0 && resultDate.compareTo(endFilterDate) <= 0 ){
-                            recordList.add(new Record(record.getId(), record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
-                        }
-                    }else{
-                        recordList.add(new Record(record.getId(), record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
-                    }
-
+                    recordList.add(new Record(record.getId(), record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
                 }
                 recyclerView.setAdapter(new ExpenseListAdapter(getContext(), recordList));
             }
@@ -285,5 +290,36 @@ public class GalleryFragment extends Fragment {
             Log.v("FAIL", "FAIL");
             }
         });
+    }
+
+    private void refreshFilter(RecyclerView recyclerView, TextView startDateFilter, TextView endDateFilter){
+        String startDate, endDate;
+        if(!startDateFilter.getText().equals("Start Date...") && !endDateFilter.getText().equals("End Date...")){
+            startDate = startDateFilter.getText().toString();
+            endDate = endDateFilter.getText().toString();
+        }else{
+            Log.v("FAIL", "Start Date or End Date Null");
+            return;
+        }
+        dbController.showAllData(new AllDataCallback() {
+            @Override
+            public void onSuccess() {
+                recordList.clear();
+                for (Record record: dbController.getDataList()
+                ) {
+                    recordList.add(new Record(record.getId(), record.getAmount(), record.getDescription(), record.getDate(), record.getType()));
+                }
+
+                if(recordList.isEmpty()){
+                    recordList.add(new Record("NO RECORD", 0.0, "NO RECORD", "NO RECORD","NO RECORD"));
+                }
+                recyclerView.setAdapter(new ExpenseListAdapter(getContext(), recordList));
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+
+            }
+        }, startDate, endDate);
     }
 }
