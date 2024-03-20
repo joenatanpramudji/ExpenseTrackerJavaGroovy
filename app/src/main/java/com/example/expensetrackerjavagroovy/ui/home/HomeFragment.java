@@ -1,5 +1,6 @@
 package com.example.expensetrackerjavagroovy.ui.home;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,6 +26,8 @@ import com.example.expensetrackerjavagroovy.controller.DBController;
 import com.example.expensetrackerjavagroovy.databinding.FragmentHomeBinding;
 import com.example.expensetrackerjavagroovy.model.Record;
 
+import java.util.Calendar;
+
 import io.realm.mongodb.App;
 
 public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -38,7 +42,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
      TextView textView;
      EditText expenseAmount;
-     EditText expenseDate;
+     TextView expenseDate;
      EditText expenseDescription;
 //     EditText expenseType;
 
@@ -47,6 +51,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
      Button addExpenseButton;
 
      String expenseTypeText = "";
+
+    DatePickerDialog datePickerDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -98,7 +104,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                             expenseTypeText);
                     dbController.insertData(record);
                     expenseAmount.setText("");
-                    expenseDate.setText("");
+                    expenseDate.setText("Select Date...");
                     expenseDescription.setText("");
 //                expenseType.setText("");
                     refreshTotalAmount();
@@ -110,6 +116,30 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             }
         });
 
+
+        expenseDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+                // date picker dialog
+                datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                expenseDate.setText(String.format("%02d", (dayOfMonth)) + "-"
+                                        + String.format("%02d", (monthOfYear + 1)) + "-" + year);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;

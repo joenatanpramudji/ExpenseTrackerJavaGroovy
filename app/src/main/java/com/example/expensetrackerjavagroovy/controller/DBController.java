@@ -153,15 +153,12 @@ public class DBController{
 
     public void insertData(Record record){
 
-        String day = record.getDate().substring(0,2);
-        String month = record.getDate().substring(2,4);
-        String year = record.getDate().substring(4);
         Document data = new Document(
 //                "userid", user.getId())
                 FIELD_AMOUNT, record.getAmount())
                 .append(FIELD_DESCRIPTION, record.getDescription())
                 .append(FIELD_TYPE, record.getType())
-                .append(FIELD_DATE, day+"-"+month+"-"+year);
+                .append(FIELD_DATE, record.getDate());
         mongoCollection.insertOne(data)
             .getAsync(result -> {
             if(result.isSuccess()){
